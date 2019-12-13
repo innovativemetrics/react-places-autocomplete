@@ -97,7 +97,7 @@ class PlacesAutocomplete extends React.Component {
       if (state.ready) {
         return null;
       } else {
-        return { ready: true };
+        return { ready: true, sessionToken };
       }
     });
   };
