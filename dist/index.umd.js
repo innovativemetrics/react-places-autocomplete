@@ -141,25 +141,35 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      _this.autocompleteService = new window.google.maps.places.AutocompleteService();
 	      _this.autocompleteOK = window.google.maps.places.PlacesServiceStatus.OK;
-	      var sessionToken = '';
 	
-	      if (window.sessionStorage) {
-	        try {
-	          var placesAutocompleteSessionToken = window.sessionStorage.getItem('placesAutocompleteSessionToken');
-	          sessionToken = JSON.parse(placesAutocompleteSessionToken);
-	        } catch (e) {
-	          // do nothing
-	        }
+	      if (!window.googlePlacesSessionToken) {
+	        window.googlePlacesSessionToken = new window.google.maps.places.AutocompleteSessionToken();
 	      }
 	
-	      if (!sessionToken) {
-	        sessionToken = new window.google.maps.places.AutocompleteSessionToken();
-	        try {
-	          window.sessionStorage.setItem('placesAutocompleteSessionToken', JSON.stringify(sessionToken));
-	        } catch (e) {
-	          // do nothing
-	        }
-	      }
+	      // let sessionToken = '';
+	
+	      // if (window.sessionStorage) {
+	      //   try {
+	      //     const placesAutocompleteSessionToken = window.sessionStorage.getItem(
+	      //       'placesAutocompleteSessionToken'
+	      //     );
+	      //     sessionToken = JSON.parse(placesAutocompleteSessionToken);
+	      //   } catch (e) {
+	      //     // do nothing
+	      //   }
+	      // }
+	
+	      // if (!sessionToken) {
+	      //   sessionToken = new window.google.maps.places.AutocompleteSessionToken();
+	      //   try {
+	      //     window.sessionStorage.setItem(
+	      //       'placesAutocompleteSessionToken',
+	      //       JSON.stringify(sessionToken)
+	      //     );
+	      //   } catch (e) {
+	      //     // do nothing
+	      //   }
+	      // }
 	
 	      _this.setState(function (state) {
 	        if (state.ready) {
@@ -201,7 +211,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (value.length) {
 	        _this.setState({ loading: true });
 	        _this.autocompleteService.getPlacePredictions(_extends({}, _this.props.searchOptions, {
-	          sessionToken: _this.state.sessionToken,
+	          sessionToken: window.googlePlacesSessionToken || '',
 	          input: value
 	        }), _this.autocompleteCallback);
 	      }
@@ -439,7 +449,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    _this.state = {
 	      loading: false,
-	      sessionToken: '',
 	      suggestions: [],
 	      userInputValue: props.value,
 	      ready: !props.googleCallbackName
