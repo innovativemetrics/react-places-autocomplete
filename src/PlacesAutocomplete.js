@@ -21,7 +21,6 @@ class PlacesAutocomplete extends React.Component {
 
     this.state = {
       loading: false,
-      sessionToken: '',
       suggestions: [],
       userInputValue: props.value,
       ready: !props.googleCallbackName,
@@ -68,36 +67,41 @@ class PlacesAutocomplete extends React.Component {
 
     this.autocompleteService = new window.google.maps.places.AutocompleteService();
     this.autocompleteOK = window.google.maps.places.PlacesServiceStatus.OK;
-    let sessionToken = '';
 
-    if (window.sessionStorage) {
-      try {
-        const placesAutocompleteSessionToken = window.sessionStorage.getItem(
-          'placesAutocompleteSessionToken'
-        );
-        sessionToken = JSON.parse(placesAutocompleteSessionToken);
-      } catch (e) {
-        // do nothing
-      }
+    if (!window.googlePlacesSessionToken) {
+      window.googlePlacesSessionToken = new window.google.maps.places.AutocompleteSessionToken();
     }
 
-    if (!sessionToken) {
-      sessionToken = new window.google.maps.places.AutocompleteSessionToken();
-      try {
-        window.sessionStorage.setItem(
-          'placesAutocompleteSessionToken',
-          JSON.stringify(sessionToken)
-        );
-      } catch (e) {
-        // do nothing
-      }
-    }
+    // let sessionToken = '';
+
+    // if (window.sessionStorage) {
+    //   try {
+    //     const placesAutocompleteSessionToken = window.sessionStorage.getItem(
+    //       'placesAutocompleteSessionToken'
+    //     );
+    //     sessionToken = JSON.parse(placesAutocompleteSessionToken);
+    //   } catch (e) {
+    //     // do nothing
+    //   }
+    // }
+
+    // if (!sessionToken) {
+    //   sessionToken = new window.google.maps.places.AutocompleteSessionToken();
+    //   try {
+    //     window.sessionStorage.setItem(
+    //       'placesAutocompleteSessionToken',
+    //       JSON.stringify(sessionToken)
+    //     );
+    //   } catch (e) {
+    //     // do nothing
+    //   }
+    // }
 
     this.setState(state => {
       if (state.ready) {
         return null;
       } else {
-        return { ready: true, sessionToken };
+        return { ready: true };
       }
     });
   };
@@ -131,7 +135,7 @@ class PlacesAutocomplete extends React.Component {
       this.autocompleteService.getPlacePredictions(
         {
           ...this.props.searchOptions,
-          sessionToken: this.state.sessionToken,
+          sessionToken: window.googlePlacesSessionToken || '',
           input: value,
         },
         this.autocompleteCallback
