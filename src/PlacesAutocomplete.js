@@ -82,9 +82,9 @@ class PlacesAutocomplete extends React.Component {
     }
 
     if (!sessionToken) {
+      sessionToken = new window.google.maps.places.AutocompleteSessionToken();
       try {
         console.log('see', window.google.maps.places);
-        sessionToken = new window.google.maps.places.AutocompleteSessionToken();
         window.sessionStorage.setItem(
           'placesAutocompleteSessionToken',
           JSON.stringify(sessionToken)
