@@ -21,6 +21,7 @@ class PlacesAutocomplete extends React.Component {
 
     this.state = {
       loading: false,
+      sessionToken: '',
       suggestions: [],
       userInputValue: props.value,
       ready: !props.googleCallbackName,
@@ -67,6 +68,33 @@ class PlacesAutocomplete extends React.Component {
 
     this.autocompleteService = new window.google.maps.places.AutocompleteService();
     this.autocompleteOK = window.google.maps.places.PlacesServiceStatus.OK;
+    let sessionToken = '';
+
+    if (window.sessionStorage) {
+      try {
+        sessionToken = window.sessionStorage.getItem(
+          'placesAutocompleteSessionToken'
+        );
+      } catch (e) {
+        // do nothing
+      }
+    }
+
+    if (!sessionToken) {
+      sessionToken = new window.google.maps.places.AutocompleteSessionToken();
+
+      if (window.sessionStorage) {
+        try {
+          window.sessionStorage.setItem(
+            'placesAutocompleteSessionToken',
+            sessionToken
+          );
+        } catch (e) {
+          // do nothing
+        }
+      }
+    }
+
     this.setState(state => {
       if (state.ready) {
         return null;
@@ -105,6 +133,7 @@ class PlacesAutocomplete extends React.Component {
       this.autocompleteService.getPlacePredictions(
         {
           ...this.props.searchOptions,
+          sessionToken: this.state.sessionToken,
           input: value,
         },
         this.autocompleteCallback
