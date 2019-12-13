@@ -81,17 +81,14 @@ class PlacesAutocomplete extends React.Component {
     }
 
     if (!sessionToken) {
-      sessionToken = new window.google.maps.places.AutocompleteSessionToken();
-
-      if (window.sessionStorage) {
-        try {
-          window.sessionStorage.setItem(
-            'placesAutocompleteSessionToken',
-            sessionToken
-          );
-        } catch (e) {
-          // do nothing
-        }
+      try {
+        sessionToken = new window.google.maps.places.AutocompleteSessionToken();
+        window.sessionStorage.setItem(
+          'placesAutocompleteSessionToken',
+          sessionToken
+        );
+      } catch (e) {
+        // do nothing
       }
     }
 
